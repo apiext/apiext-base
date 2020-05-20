@@ -25,8 +25,12 @@ import javax.crypto.Cipher;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemWriter;
@@ -359,6 +363,34 @@ public abstract class RsaUtil {
         return Base64.encodeBase64String(encryptByPrivateKey(data, key));
     }
 
+
+    // pkcs1 转 pkcs8
+    public static byte[] convertPrivateKeyPkcs1ToPkcs8(byte[] key) throws Exception {
+        //PKCSObjectIdentifiers.pkcs8ShroudedKeyBag
+        AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
+        ASN1Encodable asn1Object = ASN1ObjectIdentifier.fromByteArray(key);
+        PrivateKeyInfo privKeyInfo = new PrivateKeyInfo(algorithmIdentifier, asn1Object);
+        byte[] pkcs8Bytes = privKeyInfo.getEncoded();
+        return pkcs8Bytes;
+    }
+
+    public static String convertPrivateKeyPkcs1ToPkcs8(String key) throws Exception {
+        return Base64.encodeBase64String(convertPrivateKeyPkcs1ToPkcs8(Base64.decodeBase64(key)));
+    }
+
+    public static byte[] convertPublicKeyPkcs1ToPkcs8(byte[] key) throws Exception {
+        //PKCSObjectIdentifiers.pkcs8ShroudedKeyBag
+        AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
+        ASN1Encodable asn1Object = ASN1ObjectIdentifier.fromByteArray(key);
+        SubjectPublicKeyInfo publicKeyInfo = new SubjectPublicKeyInfo(algorithmIdentifier, asn1Object);
+        byte[] pkcs8Bytes = publicKeyInfo.getEncoded();
+        return pkcs8Bytes;
+    }
+
+    public static String convertPublicKeyPkcs1ToPkcs8(String key) throws Exception {
+        return Base64.encodeBase64String(convertPublicKeyPkcs1ToPkcs8(Base64.decodeBase64(key)));
+    }
+
     // 该方法之后的方法帮我们能够写入类似openssl的pem
     // 我们需要测试一下是否有问题,
     // openssl rsautl -encrypt -in 1.pre.txt -inkey public.pkcs8.txt -pubin -out
@@ -383,6 +415,10 @@ public abstract class RsaUtil {
         return Base64.encodeBase64String(convertPrivateKeyPkcs8ToPkcs1BytesArray(key));
     }
 
+    public static String convertPrivateKeyPkcs8ToPkcs1(String key) throws Exception {
+        return convertPrivateKeyPkcs8ToPkcs1(Base64.decodeBase64(key));
+    }
+
     public static byte[] convertPrivateKeyPkcs8ToPkcs1BytesArray(byte[] key) throws Exception {
         PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(key);
         ASN1Encodable encodable = pkInfo.parsePrivateKey();
@@ -403,6 +439,10 @@ public abstract class RsaUtil {
      */
     public static String convertPublicKeyPkcs8ToPkcs1(byte[] key) throws Exception {
         return Base64.encodeBase64String(convertPublicKeyPkcs8ToPkcs1BytesArray(key));
+    }
+
+    public static String convertPublicKeyPkcs8ToPkcs1(String key) throws Exception {
+        return convertPublicKeyPkcs8ToPkcs1(Base64.decodeBase64(key));
     }
 
     public static byte[] convertPublicKeyPkcs8ToPkcs1BytesArray(byte[] key) throws Exception {
@@ -429,6 +469,10 @@ public abstract class RsaUtil {
         writeToPem(key, "PUBLIC KEY", writer);
     }
 
+    public static void writePublicPkcs8ToPem(String key, Writer writer) throws Exception {
+        writeToPem(Base64.decodeBase64(key), "PUBLIC KEY", writer);
+    }
+
     /**
      * 公钥pkcs1到pem
      *
@@ -441,6 +485,10 @@ public abstract class RsaUtil {
      */
     public static void writePublicPkcs1ToPem(byte[] key, Writer writer) throws Exception {
         writeToPem(key, "RSA PUBLIC KEY", writer);
+    }
+
+    public static void writePublicPkcs1ToPem(String key, Writer writer) throws Exception {
+        writeToPem(Base64.decodeBase64(key), "RSA PUBLIC KEY", writer);
     }
 
     /**
@@ -457,6 +505,10 @@ public abstract class RsaUtil {
         writeToPem(key, "PRIVATE KEY", writer);
     }
 
+    public static void writePrivatePkcs8ToPem(String key, Writer writer) throws Exception {
+        writeToPem(Base64.decodeBase64(key), "PRIVATE KEY", writer);
+    }
+
     /**
      * 私钥pkcs1到pem
      *
@@ -469,6 +521,10 @@ public abstract class RsaUtil {
      */
     public static void writePrivatePkcs1ToPem(byte[] key, Writer writer) throws Exception {
         writeToPem(key, "RSA PRIVATE KEY", writer);
+    }
+
+    public static void writePrivatePkcs1ToPem(String key, Writer writer) throws Exception {
+        writeToPem(Base64.decodeBase64(key), "RSA PRIVATE KEY", writer);
     }
 
     /**

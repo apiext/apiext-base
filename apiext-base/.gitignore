@@ -121,8 +121,5 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
-apiext-base-common/src/main/resources/
-apiext-base-common/src/test/
 apiext-base-common/target/
-apiext-base-encrypt/src/main/resources/
 apiext-base-encrypt/target/
