@@ -11,6 +11,7 @@ import org.junit.Test;
 public class PasswordUtilTest {
 
     @Test
+    @SuppressWarnings("InfiniteLoopStatement")
     public void testGetMd5Password(){
         while(true){
             String encryptPassword = PasswordUtil.getEncryptPassword("abcdefghijklmn");

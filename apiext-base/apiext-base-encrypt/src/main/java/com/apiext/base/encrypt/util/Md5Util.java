@@ -2,7 +2,6 @@ package com.apiext.base.encrypt.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
@@ -29,9 +28,13 @@ public class Md5Util {
         System.out.println(treeSet.toString());
         while (treeSetIterator.hasNext()) {
             String paramMapKey = treeSetIterator.next();
-            preSignSb.append(paramMapKey + "=" + paramMap.get(paramMapKey) + "&");
+            preSignSb.append(paramMapKey);
+            preSignSb.append("=");
+            preSignSb.append(paramMap.get(paramMapKey));
+            preSignSb.append("&");
         }
-        preSignSb.append("Key=" + key);
+        preSignSb.append("Key=");
+        preSignSb.append(key);
         return DigestUtils.md5Hex(preSignSb.toString());
     }
 }

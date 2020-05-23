@@ -1,31 +1,7 @@
 package com.apiext.base.encrypt.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
@@ -34,6 +10,21 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemWriter;
+
+import javax.crypto.Cipher;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * RSA安全编码组件
@@ -46,7 +37,7 @@ public abstract class RsaUtil {
     /**
      * 非对称加密密钥算法
      */
-    public static final String KEY_ALGORITHM = "RSA";
+    private static final String KEY_ALGORITHM = "RSA";
 
     /**
      * 公钥
@@ -62,8 +53,8 @@ public abstract class RsaUtil {
      * 数字签名
      * 签名/验证算法
      */
-    public static final String SHA1_WITH_RSA_ALGORITHM = "SHA1withRSA";
-    public static final String SHA256_WITH_RSA_ALGORITHM = "SHA256WithRSA";
+    private static final String SHA1_WITH_RSA_ALGORITHM = "SHA1withRSA";
+    private static final String SHA256_WITH_RSA_ALGORITHM = "SHA256WithRSA";
 
 
     /**
@@ -80,12 +71,10 @@ public abstract class RsaUtil {
     public static String loadKeyByFile(String path) throws Exception {
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
-            String readLine = null;
+            String readLine;
             StringBuilder sb = new StringBuilder();
             while ((readLine = br.readLine()) != null) {
-                if (readLine.charAt(0) == '-') {
-                    continue;
-                } else {
+                if (readLine.charAt(0) != '-') {
                     sb.append(readLine);
                     sb.append('\r');
                 }
@@ -113,7 +102,7 @@ public abstract class RsaUtil {
     public static Map<String, Object> loadPublicKeyAndPrivateKey(String privateKeyStr, String publicKeyStr)
             throws Exception {
         // 封装密钥
-        Map<String, Object> keyMap = new HashMap<String, Object>(2);
+        Map<String, Object> keyMap = new HashMap<>(2);
         // RSAPublicKey
         keyMap.put(PUBLIC_KEY, loadPublicKeyByStr(publicKeyStr));
         // RSAPrivateKey
@@ -370,8 +359,7 @@ public abstract class RsaUtil {
         AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
         ASN1Encodable asn1Object = ASN1ObjectIdentifier.fromByteArray(key);
         PrivateKeyInfo privKeyInfo = new PrivateKeyInfo(algorithmIdentifier, asn1Object);
-        byte[] pkcs8Bytes = privKeyInfo.getEncoded();
-        return pkcs8Bytes;
+        return privKeyInfo.getEncoded();
     }
 
     public static String convertPrivateKeyPkcs1ToPkcs8(String key) throws Exception {
@@ -383,8 +371,7 @@ public abstract class RsaUtil {
         AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
         ASN1Encodable asn1Object = ASN1ObjectIdentifier.fromByteArray(key);
         SubjectPublicKeyInfo publicKeyInfo = new SubjectPublicKeyInfo(algorithmIdentifier, asn1Object);
-        byte[] pkcs8Bytes = publicKeyInfo.getEncoded();
-        return pkcs8Bytes;
+        return publicKeyInfo.getEncoded();
     }
 
     public static String convertPublicKeyPkcs1ToPkcs8(String key) throws Exception {
@@ -423,8 +410,7 @@ public abstract class RsaUtil {
         PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(key);
         ASN1Encodable encodable = pkInfo.parsePrivateKey();
         ASN1Primitive primitive = encodable.toASN1Primitive();
-        byte[] privateKeyPKCS1 = primitive.getEncoded();
-        return privateKeyPKCS1;
+        return primitive.getEncoded();
     }
 
     /**
@@ -448,8 +434,7 @@ public abstract class RsaUtil {
     public static byte[] convertPublicKeyPkcs8ToPkcs1BytesArray(byte[] key) throws Exception {
         SubjectPublicKeyInfo spkInfo = SubjectPublicKeyInfo.getInstance(key);
         ASN1Primitive primitive = spkInfo.parsePublicKey();
-        byte[] publicKeyPKCS1 = primitive.getEncoded();
-        return publicKeyPKCS1;
+        return primitive.getEncoded();
     }
 
     // 该方法之后的方法已经帮我们取得了pkcs8的公钥和私钥，我们可能需要写入到文件，像openssl一样
@@ -607,7 +592,7 @@ public abstract class RsaUtil {
         // 私钥
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         // 封装密钥
-        Map<String, Object> keyMap = new HashMap<String, Object>(2);
+        Map<String, Object> keyMap = new HashMap<>(2);
         // RSAPublicKey
         keyMap.put(PUBLIC_KEY, publicKey);
         // RSAPrivateKey
@@ -622,7 +607,7 @@ public abstract class RsaUtil {
      * @return byte[] 私钥
      * @throws Exception
      */
-    public static byte[] getPrivateKey(Map<String, Object> keyMap) throws Exception {
+    public static byte[] getPrivateKey(Map<String, Object> keyMap) {
         Key key = (Key) keyMap.get(PRIVATE_KEY);
         return key.getEncoded();
     }
@@ -634,7 +619,7 @@ public abstract class RsaUtil {
      * @return byte[] 公钥
      * @throws Exception
      */
-    public static byte[] getPublicKey(Map<String, Object> keyMap) throws Exception {
+    public static byte[] getPublicKey(Map<String, Object> keyMap) {
         Key key = (Key) keyMap.get(PUBLIC_KEY);
         return key.getEncoded();
     }

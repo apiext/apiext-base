@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringWriter;
-import java.util.Base64;
 
 /**
  * @author mrzhaowy
@@ -55,12 +54,11 @@ public class RsaUtilTest {
         String publicPkcs8Key = RsaUtil.convertPublicKeyPkcs1ToPkcs8(publicPckcs1Key);
 
         encryptAndDecrypt(publicPkcs8Key, privatePkcs8Key);
+        // java 用pkcs8的私钥解密
         // python pkcs1公钥加密的字符串
-        String pythonPublicPkcs1EncoderStr = "wobK2X3cvTvuGv9fSQ++pwwFP1iGZ9LN6BFoEBEmTM2OHMdJthL3HL70G" +
-                "85nEL5k6rjW345Ma4gsY+kBl4DJl2ckyPTK/L9H68YajQfvcH/sF9cYpbYRnbE9BYF7NJ+ulJ6gLjRs4oFaqdIRWp" +
-                "URVID2lhljS4ytRU3f9T7lum59aakX6jqqa1BQRjcCV615XhWgrXe8zRP+RNhmYAoHV9cw/mEspeF5WhZdMJzbOkqsu" +
-                "7CLFFZsVHkzZxPD4OkNZ9sHIF2/296YOMjzB7OjNiOkcu5aamxwWPv03O6tzckYOklpWCS2Uiy5tDr7mLeLzSn66W9kyx7/kwVvRQ4N2Q==";
-        System.out.println(RsaUtil.decryptToStrByPrivateKey(pythonPublicPkcs1EncoderStr, privatePkcs8Key));
+        String pythonPublicPkcs1EncoderStr = "na29zvVmSAZ5+ax25RziYjGKX3KYfiOY0UCDPnAa+5Zd6khSaBo1YGd7G6erh/1r261lvGwpFy0w9fDkERSxEoIYCo0zrL5G2EdYn78r8rgLu+y75Q23MwNq5tSG4vLzM2mDYRHneBofqqGkW6bwsjEiLN8STKbRRUXjL0NNa0iACfqG6I1XIKbYFYAHUVV8w/3YdvNAJGBPNKHOg0JrOK+k8BAenEQWVgBCXTDth58w9n/sEFXI1zOpV7mpPbBHk/NLPxH4SpClCdsMkWBhAlSy7neTcWPwCLMzspkQb/X80itaELtWpOAGqxgknVKEi7N2FlRmF7IB/cOboQBCnw==";
+        String preStr = RsaUtil.decryptToStrByPrivateKey(pythonPublicPkcs1EncoderStr, privatePkcs8Key);
+        System.out.println(preStr);
     }
 
     /**
@@ -88,12 +86,13 @@ public class RsaUtilTest {
     }
 
 
-    public void encryptAndDecrypt(String publicKey, String privateKey) throws Exception {
+    private void encryptAndDecrypt(String publicKey, String privateKey) throws Exception {
         // 一般是公钥加密
         // 私钥解密
         // 明文字节长度是由限制的,理论是2048/8 - 11 = 256 - 11 = 247
         String data = "www.apiext.com;www.apiext.cn";
         String encoderStr = RsaUtil.encryptToStrByPublicKey(data, publicKey);
+        System.out.println(encoderStr);
         Assert.assertEquals(data, RsaUtil.decryptToStrByPrivateKey(encoderStr, privateKey));
     }
 
