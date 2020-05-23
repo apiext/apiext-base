@@ -21,6 +21,18 @@ public class Md5Util {
      * @return
      */
     public static String sign(Map<String, Object> paramMap, String key) {
+        StringBuilder preSignSb = dictionaryOrderMapToStr(paramMap, key);
+        return DigestUtils.md5Hex(preSignSb.toString());
+    }
+
+    /**
+     * 字典排序将map转成str
+     * @param paramMap
+     * @param key
+     *          此key可为NULL
+     * @return
+     */
+    private static StringBuilder dictionaryOrderMapToStr(Map<String, Object> paramMap, String key) {
         StringBuilder preSignSb = new StringBuilder();
         TreeSet<String> treeSet = new TreeSet<>(String::compareTo);
         treeSet.addAll(paramMap.keySet());
@@ -30,11 +42,15 @@ public class Md5Util {
             String paramMapKey = treeSetIterator.next();
             preSignSb.append(paramMapKey);
             preSignSb.append("=");
-            preSignSb.append(paramMap.get(paramMapKey));
+            if(paramMap.get(paramMapKey) != null){
+                preSignSb.append(paramMap.get(paramMapKey));
+            }
             preSignSb.append("&");
         }
         preSignSb.append("Key=");
-        preSignSb.append(key);
-        return DigestUtils.md5Hex(preSignSb.toString());
+        if(key != null){
+            preSignSb.append(key);
+        }
+        return preSignSb;
     }
 }
