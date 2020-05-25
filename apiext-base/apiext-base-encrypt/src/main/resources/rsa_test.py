@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# python要求公钥和私钥都是pkcs1格式
+# 作者本人不熟悉python
+# 以下代码仅用来测试
 import rsa
 import base64
 
@@ -31,8 +32,14 @@ message = rsa_decrypt(encript_data, privateKey)
 print(message)
 
 # python 使用pkcs1的私钥解密java pkcs8的公钥加密的数据
-javaPublicPkcs8EncodeStr = 'TmJx+emgbajEF/x7q2AyumMRgtYo/PhJo/oGL1OgfZjANhFaK2Jkc6W/NLbIT7nAXO3wIfOQPDH3q40b7y8pE7uMXJSlIbR0dARVWJ8DfMpcOmp+en7t0qQoqcLkIXO1vyqfx/eSGyu+DL7sbme1FbHvNu91Hj96O2ZYJxZ48ABuLVrDOA0fSnb4T1QAP06q9lMeG2oDlVhsQbIh+cQCTRNUbpCFsnsqq5g+MrbtApfpsKe1Tv4fdAnvVjafTyP2Ehaf3AMuqU2rY/sJ0Uj2Kviy7KDMeqYLQG06LpC1sqAcRwcL9J+jieL2t+2MF6mIQboX5/iFUUT70ufRDquDvw=='
+javaPublicPkcs8EncodeStr = 'WMyOLGKHMSqbq1WsheI1G1+vNPc/pK4zTzGZ3TV1DRTJAY8OUpvCINFcVfPOyNmVQCcnwPn58bsotfY59co/tFhFcCGZFYY8ohGtgTpnxnL7/Jpjk8EDuOzBy9p/+WKA18IsQawH50201vPj8WtFIDnwkDzAHGph5tskhcvZc5n9d5CHjJdlHCv/G/j5fA2FsxdOHhRD3+fWrHUJFgVYgpr7Ro+XfdQrRazPmsYE45Y3Il+GOl2cP4sWNh/0oI7ziakIAircLjZ4cELnK9HD755JpgP6vt+WpCGCnyvQdjLbHIyIgtz/VgRiG2di1vnhZ2yrMwXcKanUehpsFbDvNQ=='
 javaPublicPkcs8DecoderBytes = base64.b64decode(javaPublicPkcs8EncodeStr)
 print(javaPublicPkcs8DecoderBytes)
 message = rsa_decrypt(javaPublicPkcs8DecoderBytes, privateKey)
 print(message)
+
+# 签名
+signStr = rsa.sign(data.encode('UTF-8'), privateKey, 'SHA-256')
+print(str(base64.b64encode(signStr), "UTF-8"))
+hashMethod = rsa.verify(data.encode('UTF-8'), signStr, publicKey)
+print(hashMethod)

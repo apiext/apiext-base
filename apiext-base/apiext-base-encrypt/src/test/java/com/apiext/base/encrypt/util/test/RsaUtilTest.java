@@ -89,8 +89,21 @@ public class RsaUtilTest {
         // 私钥签名
         // 公钥验签
         String data = "www.apiext.com;www.apiext.cn";
-        String signStr = RsaUtil.sign(data, privateKey);
-        Assert.assertTrue(RsaUtil.verify(data, publicKey, signStr));
+        // String signStr = RsaUtil.sign(data, privateKey);
+        String privatePkcs8Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\private_pkcs8_key.pem");
+        String publicPkcs8Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\public_pkcs8_key.pem");
+        String signStr = RsaUtil.sign(data, privatePkcs8Key);
+        System.out.println(signStr);
+        Assert.assertTrue(RsaUtil.verify(data, publicPkcs8Key, signStr));
+
+        // 验签php
+        boolean verifyResult = RsaUtil.verify("1", publicPkcs8Key, "ZHoaK9XwROjnpBBh/bOVtMf1g5QXB1Q3dohIM+pgSrUGA8M41PXv0qotMPqIj9EcZ11nmw+bb9UurVh75yOI19BDtmCqUcF5s9lFiHDNXbKVsuJMXILFsKZWeLnKg+DtLa6PpUuSQsiXZGC5Du+GJM4z4xPwVb0xsZkO07lUmzlJeQ/SghDkUgjvAl9spLWaZtt1HV4uXPHaadtq7AOkrdGKYym4X4Dh8UHFW40YFxRjzeFVz8hNwGYKsOVBmuNkt7oDIg9Uhc2Y9ow+FTONPA7dbGsKNmf0IPDPyZfbKQzw6S2lmtP3TooKdPg0FQH8LBvTCJoHpa/7JGg0eW+JPA==");
+        System.out.println(verifyResult);
+
+
+        // 验签python
+        verifyResult = RsaUtil.verify(data, publicPkcs8Key, "KTCU/l+ouUheP4JeI8dsHTE3TJJayfzDFZbXL88PC/AqpmhzU1BwS5Or35mD6o9ig9v8MeueSROASt0vWAomwYa0uF3lqRjsMnETxtfEBabevu9enWasIb9weL4cdDfgUzsKf3hcy56Tu81ZRg72oE11H+NfYiz1LFWOEqKir1ZT8Eajj3O0eqZJG7TtA2aJFT9YZzRNaAPjJVt9wYLST4j7L1emdIrkYl0IBagm9QJ5g0tt3gxlMTytV/+kvuLiOopwCgXoBaTQ38oFygX0HICWLaB0XOytfCrzDTtNJu6g82llnhOyezR0vbMdRPNxF4zFZ4R/AW+yn62notPSig==");
+        System.out.println(verifyResult);
     }
 
     /**
@@ -100,7 +113,10 @@ public class RsaUtilTest {
      */
     @Test
     public void testEncrypt() throws Exception {
-        encryptAndDecrypt(publicKey, privateKey);
+        String privatePkcs8Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\private_pkcs8_key.pem");
+        String publicPkcs8Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\public_pkcs8_key.pem");
+
+        encryptAndDecrypt(publicPkcs8Key, privatePkcs8Key);
     }
 
 
