@@ -354,6 +354,14 @@ public abstract class RsaUtil {
 
 
     // pkcs1 转 pkcs8
+    // 转出来的pkcs8在java中可用，在php中不行
+
+    /**
+     * 转出来的pkcs8在java中可用，在php中不行
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public static byte[] convertPrivateKeyPkcs1ToPkcs8(byte[] key) throws Exception {
         //PKCSObjectIdentifiers.pkcs8ShroudedKeyBag
         AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
@@ -362,10 +370,22 @@ public abstract class RsaUtil {
         return privKeyInfo.getEncoded();
     }
 
+    /**
+     * 转出来的pkcs8在java中可用，在php中不行
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public static String convertPrivateKeyPkcs1ToPkcs8(String key) throws Exception {
         return Base64.encodeBase64String(convertPrivateKeyPkcs1ToPkcs8(Base64.decodeBase64(key)));
     }
 
+    /**
+     * 转出来的pkcs8在java中可用，在php中不行
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public static byte[] convertPublicKeyPkcs1ToPkcs8(byte[] key) throws Exception {
         //PKCSObjectIdentifiers.pkcs8ShroudedKeyBag
         AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);
@@ -374,6 +394,12 @@ public abstract class RsaUtil {
         return publicKeyInfo.getEncoded();
     }
 
+    /**
+     * 转出来的pkcs8在java中可用，在php中不行
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public static String convertPublicKeyPkcs1ToPkcs8(String key) throws Exception {
         return Base64.encodeBase64String(convertPublicKeyPkcs1ToPkcs8(Base64.decodeBase64(key)));
     }

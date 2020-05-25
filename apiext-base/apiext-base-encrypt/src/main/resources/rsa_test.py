@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# python要求公钥和私钥都是pkcs1格式
 import rsa
 import base64
 

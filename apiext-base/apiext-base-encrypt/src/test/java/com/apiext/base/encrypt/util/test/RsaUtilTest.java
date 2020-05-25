@@ -33,15 +33,24 @@ public class RsaUtilTest {
      */
     @Test
     public void testWriteToPem() throws Exception {
+
+        StringWriter writer = new StringWriter();
+        RsaUtil.writePrivatePkcs8ToPem(privateKey, writer);
+        System.out.println(writer.toString());
+
+        writer = new StringWriter();
+        RsaUtil.writePublicPkcs8ToPem(publicKey, writer);
+        System.out.println(writer.toString());
+
         String privatePkcs1Str = RsaUtil.convertPrivateKeyPkcs8ToPkcs1(privateKey);
         String publicPkcs1Str = RsaUtil.convertPublicKeyPkcs8ToPkcs1(publicKey);
-        StringWriter writer = new StringWriter();
+        writer = new StringWriter();
         RsaUtil.writePrivatePkcs1ToPem(privatePkcs1Str, writer);
         System.out.println(writer.toString());
+
         writer = new StringWriter();
         RsaUtil.writePublicPkcs1ToPem(publicPkcs1Str, writer);
         System.out.println(writer.toString());
-
     }
 
     // python 代码参照resource里rsa_test.py
@@ -51,7 +60,16 @@ public class RsaUtilTest {
         String privatePkcs1Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\private_key.pem");
         String publicPckcs1Key = RsaUtil.loadKeyByFile("D:\\apiext\\apiext-base\\apiext-base-encrypt\\src\\main\\resources\\public_key.pem");
         String privatePkcs8Key = RsaUtil.convertPrivateKeyPkcs1ToPkcs8(privatePkcs1Key);
+
+        StringWriter writer = new StringWriter();
+        // 以下的pkcs8 php不能使用
+        RsaUtil.writePrivatePkcs8ToPem(privatePkcs8Key, writer);
+        System.out.println(writer.toString());
+
         String publicPkcs8Key = RsaUtil.convertPublicKeyPkcs1ToPkcs8(publicPckcs1Key);
+        writer = new StringWriter();
+        RsaUtil.writePublicPkcs8ToPem(publicPkcs8Key, writer);
+        System.out.println(writer.toString());
 
         encryptAndDecrypt(publicPkcs8Key, privatePkcs8Key);
         // java 用pkcs8的私钥解密
@@ -87,6 +105,16 @@ public class RsaUtilTest {
 
 
     private void encryptAndDecrypt(String publicKey, String privateKey) throws Exception {
+
+        StringWriter writer = new StringWriter();
+        RsaUtil.writePrivatePkcs8ToPem(privateKey, writer);
+        System.out.println(writer.toString());
+
+
+        writer = new StringWriter();
+        RsaUtil.writePublicPkcs8ToPem(publicKey, writer);
+        System.out.println(writer.toString());
+
         // 一般是公钥加密
         // 私钥解密
         // 明文字节长度是由限制的,理论是2048/8 - 11 = 256 - 11 = 247
