@@ -10,6 +10,7 @@
     <modules>
         <module>apiext-base-encrypt</module>
         <module>apiext-base-common</module>
+        <module>apiext-base-mq</module>
     </modules>
 
     <properties>

@@ -50,16 +50,46 @@ public class StringUtil {
     }
 
     /**
-     * 拼接字符串
-     *
-     * @param args
+     * in操作， 类似db的in
+     * @param param
+     * @param params
      * @return
      */
-    public static String concat(String... args) {
+    public static boolean in(String param, String ... params) {
+        for(String item : params){
+            if(param.equals(item)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * in操作，类似db的in, 忽略大小写
+     * @param param
+     * @param params
+     * @return
+     */
+    public static boolean inIgnoreCase(String param, String ... params) {
+        for(String item : params){
+            if(param.equalsIgnoreCase(item)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 拼接字符串，忽略空字符串
+     *
+     * @param params
+     * @return
+     */
+    public static String concat(String... params) {
         StringBuilder sb = new StringBuilder();
-        for (String arg : args) {
-            if (StringUtils.isNotEmpty(arg)) {
-                sb.append(arg);
+        for (String param : params) {
+            if (StringUtils.isNotEmpty(param)) {
+                sb.append(param);
             }
         }
         return sb.toString();
@@ -122,4 +152,14 @@ public class StringUtil {
         }
         return param;
     }
+
+    /**
+     * 去掉中间和两边的空格
+     * @param param
+     * @return
+     */
+    public static String trimAll(String param){
+        return param.replaceAll("\\s", "");
+    }
+
 }
