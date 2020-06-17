@@ -3,6 +3,7 @@
 ### Example user template
 
 # IntelliJ project files
+.mvn
 .idea
 *.iml
 out
